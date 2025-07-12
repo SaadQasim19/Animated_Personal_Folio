@@ -150,7 +150,7 @@ TECHNICAL SKILLS
 • Frontend: HTML5, CSS3, JavaScript, React.js
 • Backend: Node.js, Express.js, Python, Java
 • Databases: MongoDB, MySQL
-• UI Frameworks: Tailwind CSS, Bootstrap, Chakra UI, ShadCN
+• UI Frameworks: Tailwind CSS, Bootstrap, Chakra UI, ShadCN , Chart.js , Moment.js and GSAP
 • Tools & Technologies: Git, RESTful APIs, JWT Authentication
 
 EXPERIENCE
@@ -161,9 +161,9 @@ MERN Stack Developer (2024 - Present)
 • Collaborated on 25+ projects with focus on user experience
 
 PROJECTS
-• E-commerce Platform - Full-stack application with payment integration
-• Task Management System - React-based productivity application
-• Blog Platform - Content management system with admin panel
+• E-commerce Platform - Full-stack application with CRUD operations and Api integration
+• Banking Management System - React-based productivity application
+• Gemini Clone - Gemini Clone with User Authentication
 • Weather App - Real-time weather application with API integration
 
 EDUCATION
@@ -181,7 +181,7 @@ LANGUAGES
 • Urdu (Native)
 
 INTERESTS
-Web Development, Open Source Contribution, Learning New Technologies, UI/UX Design
+Web Development, Open Source Contribution, Machine Learning, UI/UX Design
     `;
 
     // Create and download the CV file

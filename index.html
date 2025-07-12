@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <!-- Add these meta tags for better SEO -->
+    <meta name="description" content="Muhammad Saad Qasim - MERN Stack Developer Portfolio. Showcasing modern web applications built with React, Node.js, MongoDB, and Express.js">
+    <meta name="keywords" content="MERN Stack Developer, React.js, Node.js, MongoDB, Express.js, Full Stack Developer, Web Developer">
+    <meta name="author" content="Muhammad Saad Qasim">
+    <title>Muhammad Saad Qasim - MERN Stack Developer | Portfolio</title>
+    
+    <!-- Add structured data for better search engine understanding -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Muhammad Saad Qasim",
+      "jobTitle": "MERN Stack Developer",
+      "url": "https://your-portfolio-url.com",
+      "email": "m.saadqasim7665@gmail.com"
+    }
+    </script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -18,12 +35,16 @@
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
-
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fas fa-moon" id="theme-icon"></i>
-            </button>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </nav>
     </header>
 
