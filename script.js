@@ -1,5 +1,5 @@
 // Theme Toggle Functionality
- function toggleTheme() {
+function toggleTheme() {
     const body = document.body;
     const themeIcon = document.getElementById('theme-icon');
     
@@ -102,21 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const elementsToObserve = document.querySelectorAll('.section-title, .stat-item, .skills-text, .skills-bars, .experience-card, .contact-info, .contact-form, .stats, .project-card');
     elementsToObserve.forEach(el => observer.observe(el));
     
-    // Debug: Check if project cards are found
-    const projectCards = document.querySelectorAll('.project-card');
-    console.log('Found project cards:', projectCards.length);
-    
     // Initialize background effects
     initBackgroundEffects();
     
     // Initialize project card interaction
     initProjectCardInteraction();
-    
-    // Initialize rolling boxes after a delay
-    setTimeout(() => {
-        console.log('Initializing rolling boxes...');
-        createRollingBoxes();
-    }, 2000);
 });
 
 // Form Submission
@@ -140,12 +130,9 @@ function handleSubmit(event) {
 
 // Download CV Function
 function downloadCV() {
-   
     // Create a sample CV content
-    try{
-
-    
-    const cvContent = `
+    try {
+        const cvContent = `
 CURRICULUM VITAE
 
 Name: Muhammad Saad Qasim
@@ -194,24 +181,24 @@ LANGUAGES
 
 INTERESTS
 Web Development, Open Source Contribution, Machine Learning, UI/UX Design
-    `;
+        `;
 
-    // Create and download the CV file
-    const blob = new Blob([cvContent], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Muhammad_Saad_Qasim_CV.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+        // Create and download the CV file
+        const blob = new Blob([cvContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Muhammad_Saad_Qasim_CV.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error downloading CV:', error);
+        alert('Failed to download CV. Please try again or contact me directly.');
+    }
 }
-catch (error) {
-    console.error('Error downloading CV:', error);
-    alert('Failed to download CV. Please try again or contact me directly.');
-}
-}
+
 // Add floating animation to hero elements
 function addFloatingAnimation() {
     const floatingElements = document.querySelectorAll('.floating-element');
@@ -238,382 +225,326 @@ window.addEventListener('load', () => {
     });
 });
 
-// Mobile menu toggle (for future enhancement)
+// Mobile menu toggle
 function toggleMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('active');
-}
-
-// Typing effect for hero text (enhanced version)
-function typeWriter(element, text, speed = 100) {
-    let i = 0;
-    element.innerHTML = '';
+    const mobileToggle = document.querySelector('.mobile-menu-toggle i');
     
-    function type() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
+    navLinks.classList.toggle('active');
+    
+    // Change hamburger to X and vice versa
+    if (navLinks.classList.contains('active')) {
+        mobileToggle.className = 'fas fa-times';
+    } else {
+        mobileToggle.className = 'fas fa-bars';
     }
-    type();
 }
 
-// Add scroll-triggered animations for better performance
-const scrollElements = document.querySelectorAll('.skill-item, .contact-item');
-
-const elementInView = (el, dividend = 1) => {
-    const elementTop = el.getBoundingClientRect().top;
-    return (
-        elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
-    );
-};
-
-const displayScrollElement = (element) => {
-    element.classList.add('scrolled');
-};
-
-const handleScrollAnimation = () => {
-    scrollElements.forEach((el) => {
-        if (elementInView(el, 1.25)) {
-            displayScrollElement(el);
+// Close mobile menu when clicking on a link
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const mobileMenu = document.querySelector('.nav-links');
+    const mobileToggle = document.querySelector('.mobile-menu-toggle i');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileToggle.className = 'fas fa-bars';
+        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('nav') && mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            mobileToggle.className = 'fas fa-bars';
         }
     });
-};
+});
 
-window.addEventListener('scroll', handleScrollAnimation);
+// Enhanced project card interaction for mobile
+function initProjectCardInteraction() {
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    // Check if device supports hover
+    const supportsHover = window.matchMedia('(hover: hover)').matches;
+    
+    if (!supportsHover) {
+        // Touch device - add click functionality
+        projectCards.forEach(card => {
+            let isExpanded = false;
+            
+            card.addEventListener('click', function(e) {
+                // Don't expand if clicking on project links
+                if (e.target.closest('.project-link')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                if (isExpanded) {
+                    card.classList.remove('expanded');
+                    isExpanded = false;
+                } else {
+                    // Close all other expanded cards
+                    projectCards.forEach(otherCard => {
+                        otherCard.classList.remove('expanded');
+                    });
+                    
+                    card.classList.add('expanded');
+                    isExpanded = true;
+                }
+            });
+        });
+    }
+}
+
+// Optimize animations for mobile
+function optimizeForMobile() {
+    if (window.innerWidth <= 768) {
+        // Reduce animation complexity on mobile
+        const particles = document.querySelector('.floating-particles');
+        const bgBoxes = document.querySelector('.bg-boxes');
+        
+        if (particles) {
+            particles.style.display = 'none';
+        }
+        
+        if (bgBoxes && window.innerWidth <= 480) {
+            bgBoxes.style.display = 'none';
+        }
+    }
+}
+
+// Handle orientation changes
+window.addEventListener('orientationchange', () => {
+    // Close mobile menu on orientation change
+    const mobileMenu = document.querySelector('.nav-links');
+    const mobileToggle = document.querySelector('.mobile-menu-toggle i');
+    
+    if (mobileMenu.classList.contains('active')) {
+        mobileMenu.classList.remove('active');
+        mobileToggle.className = 'fas fa-bars';
+    }
+    
+    // Recalculate hero height
+    setTimeout(() => {
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.minHeight = window.innerHeight + 'px';
+        }
+    }, 100);
+});
+
+// Optimize background effects for mobile
+function initBackgroundEffects() {
+    if (window.innerWidth > 768) {
+        createBackgroundGrid();
+        createFloatingParticles();
+        initBackgroundInteraction();
+    } else {
+        // Simplified version for mobile
+        createBackgroundGrid();
+        // Skip resource-intensive effects on mobile
+    }
+}
+
+// Handle resize events
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        optimizeForMobile();
+        
+        // Reinitialize background effects if switching to desktop
+        if (window.innerWidth > 768) {
+            const existingParticles = document.querySelector('.floating-particles');
+            if (!existingParticles) {
+                createFloatingParticles();
+            }
+        }
+    }, 250);
+});
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    optimizeForMobile();
+    initProjectCardInteraction();
+    // ... rest of existing initialization code
+});
 
 // Background Interactive Boxes
 function createBackgroundBoxes() {
-  const bgBoxes = document.createElement('div');
-  bgBoxes.className = 'bg-boxes';
-  document.body.appendChild(bgBoxes);
+    const bgBoxes = document.createElement('div');
+    bgBoxes.className = 'bg-boxes';
+    document.body.appendChild(bgBoxes);
 
-  const boxes = [];
-  const boxSize = 100;
-  const cols = Math.ceil(window.innerWidth / boxSize);
-  const rows = Math.ceil(window.innerHeight / boxSize);
+    const boxes = [];
+    const boxSize = 100;
+    const cols = Math.ceil(window.innerWidth / boxSize);
+    const rows = Math.ceil(window.innerHeight / boxSize);
 
-  for (let i = 0; i < cols * rows; i++) {
-    const box = document.createElement('div');
-    box.className = 'bg-box';
-    
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    
-    box.style.left = `${col * boxSize}px`;
-    box.style.top = `${row * boxSize}px`;
-    
-    bgBoxes.appendChild(box);
-    boxes.push(box);
-  }
+    for (let i = 0; i < cols * rows; i++) {
+        const box = document.createElement('div');
+        box.className = 'bg-box';
+        
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        
+        box.style.left = `${col * boxSize}px`;
+        box.style.top = `${row * boxSize}px`;
+        
+        bgBoxes.appendChild(box);
+        boxes.push(box);
+    }
 
-  return boxes;
+    return boxes;
 }
 
 // Create background grid
 function createBackgroundGrid() {
-  const bgGrid = document.createElement('div');
-  bgGrid.className = 'bg-grid';
-  document.body.appendChild(bgGrid);
+    const bgGrid = document.createElement('div');
+    bgGrid.className = 'bg-grid';
+    document.body.appendChild(bgGrid);
 }
 
 // Create floating particles
 function createFloatingParticles() {
-  const particlesContainer = document.createElement('div');
-  particlesContainer.className = 'floating-particles';
-  document.body.appendChild(particlesContainer);
+    const particlesContainer = document.createElement('div');
+    particlesContainer.className = 'floating-particles';
+    document.body.appendChild(particlesContainer);
 
-  function createParticle() {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 15 + 's';
-    particlesContainer.appendChild(particle);
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particlesContainer.appendChild(particle);
 
-    setTimeout(() => {
-      particle.remove();
-    }, 25000);
-  }
+        setTimeout(() => {
+            particle.remove();
+        }, 25000);
+    }
 
-  // Create particles periodically
-  setInterval(createParticle, 2000);
+    // Create particles periodically
+    setInterval(createParticle, 2000);
 }
 
 // Mouse interaction with background boxes
 function initBackgroundInteraction() {
-  const boxes = createBackgroundBoxes();
-  let mouseX = 0;
-  let mouseY = 0;
+    const boxes = createBackgroundBoxes();
+    let mouseX = 0;
+    let mouseY = 0;
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
 
-    boxes.forEach((box, index) => {
-      const rect = box.getBoundingClientRect();
-      const boxCenterX = rect.left + rect.width / 2;
-      const boxCenterY = rect.top + rect.height / 2;
-      
-      const distance = Math.sqrt(
-        Math.pow(mouseX - boxCenterX, 2) + Math.pow(mouseY - boxCenterY, 2)
-      );
+        boxes.forEach((box, index) => {
+            const rect = box.getBoundingClientRect();
+            const boxCenterX = rect.left + rect.width / 2;
+            const boxCenterY = rect.top + rect.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(mouseX - boxCenterX, 2) + Math.pow(mouseY - boxCenterY, 2)
+            );
 
-      if (distance < 150) {
-        box.classList.add('active');
-        
-        // Add random activation to nearby boxes
-        if (Math.random() > 0.7) {
-          const randomIndex = Math.floor(Math.random() * boxes.length);
-          const randomBox = boxes[randomIndex];
-          const randomRect = randomBox.getBoundingClientRect();
-          const randomDistance = Math.sqrt(
-            Math.pow(mouseX - (randomRect.left + randomRect.width / 2), 2) + 
-            Math.pow(mouseY - (randomRect.top + randomRect.height / 2), 2)
-          );
-          
-          if (randomDistance < 300) {
-            randomBox.classList.add('active');
-            setTimeout(() => {
-              randomBox.classList.remove('active');
-            }, 1000);
-          }
-        }
-      } else {
-        box.classList.remove('active');
-      }
+            if (distance < 150) {
+                box.classList.add('active');
+                
+                // Add random activation to nearby boxes
+                if (Math.random() > 0.7) {
+                    const randomIndex = Math.floor(Math.random() * boxes.length);
+                    const randomBox = boxes[randomIndex];
+                    const randomRect = randomBox.getBoundingClientRect();
+                    const randomDistance = Math.sqrt(
+                        Math.pow(mouseX - (randomRect.left + randomRect.width / 2), 2) + 
+                        Math.pow(mouseY - (randomRect.top + randomRect.height / 2), 2)
+                    );
+                    
+                    if (randomDistance < 300) {
+                        randomBox.classList.add('active');
+                        setTimeout(() => {
+                            randomBox.classList.remove('active');
+                        }, 1000);
+                    }
+                }
+            } else {
+                box.classList.remove('active');
+            }
+        });
     });
-  });
 
-  // Auto-animate some boxes randomly
-  setInterval(() => {
-    const randomBox = boxes[Math.floor(Math.random() * boxes.length)];
-    randomBox.classList.add('active');
-    setTimeout(() => {
-      randomBox.classList.remove('active');
-    }, 2000);
-  }, 3000);
+    // Auto-animate some boxes randomly
+    setInterval(() => {
+        const randomBox = boxes[Math.floor(Math.random() * boxes.length)];
+        randomBox.classList.add('active');
+        setTimeout(() => {
+            randomBox.classList.remove('active');
+        }, 2000);
+    }, 3000);
 }
 
 // Initialize background effects
 function initBackgroundEffects() {
-  createBackgroundGrid();
-  createFloatingParticles();
-  initBackgroundInteraction();
+    createBackgroundGrid();
+    createFloatingParticles();
+    initBackgroundInteraction();
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // ...existing code...
   initBackgroundEffects();
 });
 
 // Handle window resize
 window.addEventListener('resize', () => {
-  // Remove existing boxes
-  const existingBoxes = document.querySelector('.bg-boxes');
-  if (existingBoxes) {
-    existingBoxes.remove();
-  }
-  
-  // Recreate boxes with new dimensions
-  setTimeout(() => {
-    const boxes = createBackgroundBoxes();
-    // Re-initialize interaction
-    initBackgroundInteraction();
-  }, 100);
+    // Remove existing boxes
+    const existingBoxes = document.querySelector('.bg-boxes');
+    if (existingBoxes) {
+        existingBoxes.remove();
+    }
+    
+    // Recreate boxes with new dimensions
+    setTimeout(() => {
+        const boxes = createBackgroundBoxes();
+        // Re-initialize interaction
+        initBackgroundInteraction();
+    }, 100);
 });
-
-// Rolling Boxes Animation
-function createRollingBoxes() {
-  // Check if container already exists
-  const existingContainer = document.querySelector('.rolling-boxes-container');
-  if (existingContainer) {
-      existingContainer.remove();
-  }
-  
-  const rollingContainer = document.createElement('div');
-  rollingContainer.className = 'rolling-boxes-container';
-  document.body.appendChild(rollingContainer);
-  
-  console.log('Rolling container created and added to body');
-
-  const sizes = ['small', 'medium', 'large'];
-  let boxCount = 0;
-
-  // Create horizontal rolling boxes
-  function createHorizontalBox() {
-    const box = document.createElement('div');
-    box.className = `rolling-box ${sizes[Math.floor(Math.random() * sizes.length)]}`;
-    
-    // Random vertical position
-    const randomTop = Math.random() * (window.innerHeight - 50);
-    box.style.top = randomTop + 'px';
-    
-    // Random animation duration for variety
-    const duration = 6 + Math.random() * 4; // 6-10 seconds
-    box.style.animationDuration = duration + 's';
-    
-    rollingContainer.appendChild(box);
-    boxCount++;
-    console.log('Horizontal box created, total boxes:', boxCount);
-
-    // Remove box after animation completes
-    setTimeout(() => {
-      if (box.parentNode) {
-        box.parentNode.removeChild(box);
-        boxCount--;
-      }
-    }, duration * 1000);
-  }
-
-  // Create vertical rolling boxes
-  function createVerticalBox() {
-    const box = document.createElement('div');
-    box.className = `rolling-box vertical ${sizes[Math.floor(Math.random() * sizes.length)]}`;
-    
-    // Random horizontal position
-    const randomLeft = Math.random() * (window.innerWidth - 50);
-    box.style.left = randomLeft + 'px';
-    
-    // Random animation duration for variety
-    const duration = 6 + Math.random() * 4; // 6-10 seconds
-    box.style.animationDuration = duration + 's';
-    
-    rollingContainer.appendChild(box);
-    boxCount++;
-    console.log('Vertical box created, total boxes:', boxCount);
-
-    // Remove box after animation completes
-    setTimeout(() => {
-      if (box.parentNode) {
-        box.parentNode.removeChild(box);
-        boxCount--;
-      }
-    }, duration * 1000);
-  }
-
-  // Start the animation - simplified logic
-  function startRollingBoxes() {
-    // Create horizontal boxes
-    if (Math.random() > 0.3 && boxCount < 15) {
-      createHorizontalBox();
-    }
-    
-    // Create vertical boxes
-    if (Math.random() > 0.4 && boxCount < 15) {
-      createVerticalBox();
-    }
-  }
-
-  // Create initial boxes immediately
-  startRollingBoxes();
-  startRollingBoxes();
-  
-  // Create boxes periodically
-  const boxInterval = setInterval(() => {
-    if (boxCount < 20) { // Limit total boxes for performance
-      startRollingBoxes();
-    }
-  }, 2000); // Create new boxes every 2 seconds
-
-  // Simplified scroll-based activation
-  window.addEventListener('scroll', () => {
-    const heroSection = document.querySelector('.hero');
-    const footer = document.querySelector('footer');
-    
-    if (heroSection && footer) {
-      const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-      const footerTop = footer.offsetTop;
-      const currentScroll = window.scrollY + window.innerHeight;
-      
-      // Show boxes only between hero and footer
-      if (window.scrollY > (heroBottom * 0.5) && currentScroll < footerTop) {
-        rollingContainer.style.display = 'block';
-        rollingContainer.style.opacity = '1';
-      } else {
-        rollingContainer.style.display = 'none';
-        rollingContainer.style.opacity = '0';
-      }
-    } else {
-      // If sections not found, show boxes everywhere
-      rollingContainer.style.display = 'block';
-      rollingContainer.style.opacity = '1';
-    }
-  });
-
-  // Clean up on page unload
-  window.addEventListener('beforeunload', () => {
-    clearInterval(boxInterval);
-  });
-
-  return rollingContainer;
-}
 
 // Enhanced project card interaction
 function initProjectCardInteraction() {
-  const projectCards = document.querySelectorAll('.project-card');
-  
-  // Check if device supports hover
-  const supportsHover = window.matchMedia('(hover: hover)').matches;
-  
-  if (!supportsHover) {
-    // Touch device - add click functionality
-    projectCards.forEach(card => {
-      let isExpanded = false;
-      
-      card.addEventListener('click', function(e) {
-        if (e.target.closest('.project-link')) {
-          return; // Allow normal link behavior
-        }
-        
-        e.preventDefault();
-        
-        if (isExpanded) {
-          card.classList.remove('expanded');
-          isExpanded = false;
-        } else {
-          // Close all other expanded cards
-          projectCards.forEach(otherCard => {
-            otherCard.classList.remove('expanded');
-          });
-          
-          card.classList.add('expanded');
-          isExpanded = true;
-        }
-      });
-    });
-  }
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    // Check if device supports hover
+    const supportsHover = window.matchMedia('(hover: hover)').matches;
+    
+    if (!supportsHover) {
+        // Touch device - add click functionality
+        projectCards.forEach(card => {
+            let isExpanded = false;
+            
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.project-link')) {
+                    return; // Allow normal link behavior
+                }
+                
+                e.preventDefault();
+                
+                if (isExpanded) {
+                    card.classList.remove('expanded');
+                    isExpanded = false;
+                } else {
+                    // Close all other expanded cards
+                    projectCards.forEach(otherCard => {
+                        otherCard.classList.remove('expanded');
+                    });
+                    
+                    card.classList.add('expanded');
+                    isExpanded = true;
+                }
+            });
+        });
+    }
 }
-
-// Update the existing resize event listener
-window.addEventListener('resize', () => {
-  // Remove existing boxes
-  const existingBoxes = document.querySelector('.bg-boxes');
-  if (existingBoxes) {
-    existingBoxes.remove();
-  }
-  
-  // Recreate boxes with new dimensions
-  setTimeout(() => {
-    const boxes = createBackgroundBoxes();
-    // Re-initialize interaction
-    initBackgroundInteraction();
-  }, 100);
-  
-  // Handle rolling boxes resize
-  const existingRollingBoxes = document.querySelector('.rolling-boxes-container');
-  if (existingRollingBoxes) {
-    // Adjust container on resize
-    const boxes = existingRollingBoxes.querySelectorAll('.rolling-box');
-    boxes.forEach(box => {
-      if (box.classList.contains('vertical')) {
-        const randomLeft = Math.random() * (window.innerWidth - 50);
-        box.style.left = randomLeft + 'px';
-      } else {
-        const randomTop = Math.random() * (window.innerHeight - 50);
-        box.style.top = randomTop + 'px';
-      }
-    });
-  }
-});
