@@ -97,7 +97,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements for animation
+// Update the DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', () => {
     const elementsToObserve = document.querySelectorAll('.section-title, .stat-item, .skills-text, .skills-bars, .experience-card, .contact-info, .contact-form, .stats, .project-card');
     elementsToObserve.forEach(el => observer.observe(el));
@@ -105,6 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Debug: Check if project cards are found
     const projectCards = document.querySelectorAll('.project-card');
     console.log('Found project cards:', projectCards.length);
+    
+    // Initialize background effects
+    initBackgroundEffects();
+    
+    // Initialize project card interaction
+    initProjectCardInteraction();
+    
+    // Initialize rolling boxes after a delay
+    setTimeout(() => {
+        console.log('Initializing rolling boxes...');
+        createRollingBoxes();
+    }, 2000);
 });
 
 // Form Submission
@@ -410,4 +422,198 @@ window.addEventListener('resize', () => {
     // Re-initialize interaction
     initBackgroundInteraction();
   }, 100);
+});
+
+// Rolling Boxes Animation
+function createRollingBoxes() {
+  // Check if container already exists
+  const existingContainer = document.querySelector('.rolling-boxes-container');
+  if (existingContainer) {
+      existingContainer.remove();
+  }
+  
+  const rollingContainer = document.createElement('div');
+  rollingContainer.className = 'rolling-boxes-container';
+  document.body.appendChild(rollingContainer);
+  
+  console.log('Rolling container created and added to body');
+
+  const sizes = ['small', 'medium', 'large'];
+  let boxCount = 0;
+
+  // Create horizontal rolling boxes
+  function createHorizontalBox() {
+    const box = document.createElement('div');
+    box.className = `rolling-box ${sizes[Math.floor(Math.random() * sizes.length)]}`;
+    
+    // Random vertical position
+    const randomTop = Math.random() * (window.innerHeight - 50);
+    box.style.top = randomTop + 'px';
+    
+    // Random animation duration for variety
+    const duration = 6 + Math.random() * 4; // 6-10 seconds
+    box.style.animationDuration = duration + 's';
+    
+    rollingContainer.appendChild(box);
+    boxCount++;
+    console.log('Horizontal box created, total boxes:', boxCount);
+
+    // Remove box after animation completes
+    setTimeout(() => {
+      if (box.parentNode) {
+        box.parentNode.removeChild(box);
+        boxCount--;
+      }
+    }, duration * 1000);
+  }
+
+  // Create vertical rolling boxes
+  function createVerticalBox() {
+    const box = document.createElement('div');
+    box.className = `rolling-box vertical ${sizes[Math.floor(Math.random() * sizes.length)]}`;
+    
+    // Random horizontal position
+    const randomLeft = Math.random() * (window.innerWidth - 50);
+    box.style.left = randomLeft + 'px';
+    
+    // Random animation duration for variety
+    const duration = 6 + Math.random() * 4; // 6-10 seconds
+    box.style.animationDuration = duration + 's';
+    
+    rollingContainer.appendChild(box);
+    boxCount++;
+    console.log('Vertical box created, total boxes:', boxCount);
+
+    // Remove box after animation completes
+    setTimeout(() => {
+      if (box.parentNode) {
+        box.parentNode.removeChild(box);
+        boxCount--;
+      }
+    }, duration * 1000);
+  }
+
+  // Start the animation - simplified logic
+  function startRollingBoxes() {
+    // Create horizontal boxes
+    if (Math.random() > 0.3 && boxCount < 15) {
+      createHorizontalBox();
+    }
+    
+    // Create vertical boxes
+    if (Math.random() > 0.4 && boxCount < 15) {
+      createVerticalBox();
+    }
+  }
+
+  // Create initial boxes immediately
+  startRollingBoxes();
+  startRollingBoxes();
+  
+  // Create boxes periodically
+  const boxInterval = setInterval(() => {
+    if (boxCount < 20) { // Limit total boxes for performance
+      startRollingBoxes();
+    }
+  }, 2000); // Create new boxes every 2 seconds
+
+  // Simplified scroll-based activation
+  window.addEventListener('scroll', () => {
+    const heroSection = document.querySelector('.hero');
+    const footer = document.querySelector('footer');
+    
+    if (heroSection && footer) {
+      const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+      const footerTop = footer.offsetTop;
+      const currentScroll = window.scrollY + window.innerHeight;
+      
+      // Show boxes only between hero and footer
+      if (window.scrollY > (heroBottom * 0.5) && currentScroll < footerTop) {
+        rollingContainer.style.display = 'block';
+        rollingContainer.style.opacity = '1';
+      } else {
+        rollingContainer.style.display = 'none';
+        rollingContainer.style.opacity = '0';
+      }
+    } else {
+      // If sections not found, show boxes everywhere
+      rollingContainer.style.display = 'block';
+      rollingContainer.style.opacity = '1';
+    }
+  });
+
+  // Clean up on page unload
+  window.addEventListener('beforeunload', () => {
+    clearInterval(boxInterval);
+  });
+
+  return rollingContainer;
+}
+
+// Enhanced project card interaction
+function initProjectCardInteraction() {
+  const projectCards = document.querySelectorAll('.project-card');
+  
+  // Check if device supports hover
+  const supportsHover = window.matchMedia('(hover: hover)').matches;
+  
+  if (!supportsHover) {
+    // Touch device - add click functionality
+    projectCards.forEach(card => {
+      let isExpanded = false;
+      
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.project-link')) {
+          return; // Allow normal link behavior
+        }
+        
+        e.preventDefault();
+        
+        if (isExpanded) {
+          card.classList.remove('expanded');
+          isExpanded = false;
+        } else {
+          // Close all other expanded cards
+          projectCards.forEach(otherCard => {
+            otherCard.classList.remove('expanded');
+          });
+          
+          card.classList.add('expanded');
+          isExpanded = true;
+        }
+      });
+    });
+  }
+}
+
+// Update the existing resize event listener
+window.addEventListener('resize', () => {
+  // Remove existing boxes
+  const existingBoxes = document.querySelector('.bg-boxes');
+  if (existingBoxes) {
+    existingBoxes.remove();
+  }
+  
+  // Recreate boxes with new dimensions
+  setTimeout(() => {
+    const boxes = createBackgroundBoxes();
+    // Re-initialize interaction
+    initBackgroundInteraction();
+  }, 100);
+  
+  // Handle rolling boxes resize
+  const existingRollingBoxes = document.querySelector('.rolling-boxes-container');
+  if (existingRollingBoxes) {
+    // Adjust container on resize
+    const boxes = existingRollingBoxes.querySelectorAll('.rolling-box');
+    boxes.forEach(box => {
+      if (box.classList.contains('vertical')) {
+        const randomLeft = Math.random() * (window.innerWidth - 50);
+        box.style.left = randomLeft + 'px';
+      } else {
+        const randomTop = Math.random() * (window.innerHeight - 50);
+        box.style.top = randomTop + 'px';
+      }
+    });
+  }
 });
