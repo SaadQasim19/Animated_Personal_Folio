@@ -12,13 +12,16 @@
 }
 
 [data-theme="dark"] {
-  --bg-color: #000000;
-  --text-color: #ffffff;
-  --card-bg: rgba(0, 0, 0, 0.5);
-  --shadow: rgba(0, 0, 0, 0.7);
-  --border-color: rgba(0, 255, 255, 0.15);
-  --glass-bg: rgba(0, 0, 0, 0.4);
-  --glass-border: rgba(0, 255, 255, 0.1);
+  --primary-color: #2563eb;      /* Blue */
+  --secondary-color: #fbbf24;    /* Yellow/Orange */
+  --accent-color: #7c3aed;       /* Purple */
+  --bg-color: #f8fafc;           /* Light background */
+  --text-color: #1e293b;         /* Dark text */
+  --card-bg: rgba(255,255,255,0.8);
+  --shadow: rgba(0,0,0,0.08);
+  --border-color: rgba(37,99,235,0.15);
+  --glass-bg: rgba(255,255,255,0.7);
+  --glass-border: rgba(37,99,235,0.08);
 }
 
 * {
@@ -49,7 +52,8 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
+  background:transparent;
+  /* background: radial-gradient(
       circle at 20% 80%,
       rgba(0, 255, 255, 0.1) 0%,
       transparent 50%
@@ -63,7 +67,7 @@ body::before {
       circle at 40% 40%,
       rgba(57, 255, 20, 0.08) 0%,
       transparent 50%
-    );
+    ); */
   pointer-events: none;
   z-index: -1;
 }
@@ -244,7 +248,6 @@ header {
   z-index: 1000;
   transition: all 0.3s ease;
 }
-
 [data-theme="dark"] header {
   background: rgba(0, 0, 0, 0.8);
 }
@@ -1159,6 +1162,34 @@ footer {
 
 .mobile-menu-toggle:hover {
   color: var(--primary-color);
+}
+
+/* Remove the grid background styling */
+.bg-grid,
+.bg-grid::before {
+  display: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  animation: none !important;
+  pointer-events: none !important;
+}
+
+/* Hide interactive background boxes and disable their animation */
+.bg-boxes,
+.bg-box,
+.bg-box.active,
+.bg-box:nth-child(even),
+.bg-box:nth-child(even).active,
+.bg-box:nth-child(3n),
+.bg-box:nth-child(3n).active {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 /* Enhanced Project Card Interactions */

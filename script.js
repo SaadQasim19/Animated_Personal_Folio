@@ -304,14 +304,9 @@ function optimizeForMobile() {
     if (window.innerWidth <= 768) {
         // Reduce animation complexity on mobile
         const particles = document.querySelector('.floating-particles');
-        const bgBoxes = document.querySelector('.bg-boxes');
         
         if (particles) {
             particles.style.display = 'none';
-        }
-        
-        if (bgBoxes && window.innerWidth <= 480) {
-            bgBoxes.style.display = 'none';
         }
     }
 }
@@ -339,12 +334,11 @@ window.addEventListener('orientationchange', () => {
 // Optimize background effects for mobile
 function initBackgroundEffects() {
     if (window.innerWidth > 768) {
-        createBackgroundGrid();
+        // createBackgroundGrid(); // Comment out if you don't want grid
         createFloatingParticles();
-        initBackgroundInteraction();
     } else {
         // Simplified version for mobile
-        createBackgroundGrid();
+        // createBackgroundGrid(); // Comment out if you don't want grid
         // Skip resource-intensive effects on mobile
     }
 }
@@ -356,7 +350,6 @@ window.addEventListener('resize', () => {
     resizeTimer = setTimeout(() => {
         optimizeForMobile();
         
-        // Reinitialize background effects if switching to desktop
         if (window.innerWidth > 768) {
             const existingParticles = document.querySelector('.floating-particles');
             if (!existingParticles) {
@@ -373,40 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ... rest of existing initialization code
 });
 
-// Background Interactive Boxes
-function createBackgroundBoxes() {
-    const bgBoxes = document.createElement('div');
-    bgBoxes.className = 'bg-boxes';
-    document.body.appendChild(bgBoxes);
-
-    const boxes = [];
-    const boxSize = 100;
-    const cols = Math.ceil(window.innerWidth / boxSize);
-    const rows = Math.ceil(window.innerHeight / boxSize);
-
-    for (let i = 0; i < cols * rows; i++) {
-        const box = document.createElement('div');
-        box.className = 'bg-box';
-        
-        const col = i % cols;
-        const row = Math.floor(i / cols);
-        
-        box.style.left = `${col * boxSize}px`;
-        box.style.top = `${row * boxSize}px`;
-        
-        bgBoxes.appendChild(box);
-        boxes.push(box);
-    }
-
-    return boxes;
-}
-
 // Create background grid
-function createBackgroundGrid() {
-    const bgGrid = document.createElement('div');
-    bgGrid.className = 'bg-grid';
-    document.body.appendChild(bgGrid);
-}
+// function createBackgroundGrid() {
+//     const bgGrid = document.createElement('div');
+//     bgGrid.className = 'bg-grid';
+//     document.body.appendChild(bgGrid);
+// }
 
 // Create floating particles
 function createFloatingParticles() {
@@ -430,87 +395,16 @@ function createFloatingParticles() {
     setInterval(createParticle, 2000);
 }
 
-// Mouse interaction with background boxes
-function initBackgroundInteraction() {
-    const boxes = createBackgroundBoxes();
-    let mouseX = 0;
-    let mouseY = 0;
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-
-        boxes.forEach((box, index) => {
-            const rect = box.getBoundingClientRect();
-            const boxCenterX = rect.left + rect.width / 2;
-            const boxCenterY = rect.top + rect.height / 2;
-            
-            const distance = Math.sqrt(
-                Math.pow(mouseX - boxCenterX, 2) + Math.pow(mouseY - boxCenterY, 2)
-            );
-
-            if (distance < 150) {
-                box.classList.add('active');
-                
-                // Add random activation to nearby boxes
-                if (Math.random() > 0.7) {
-                    const randomIndex = Math.floor(Math.random() * boxes.length);
-                    const randomBox = boxes[randomIndex];
-                    const randomRect = randomBox.getBoundingClientRect();
-                    const randomDistance = Math.sqrt(
-                        Math.pow(mouseX - (randomRect.left + randomRect.width / 2), 2) + 
-                        Math.pow(mouseY - (randomRect.top + randomRect.height / 2), 2)
-                    );
-                    
-                    if (randomDistance < 300) {
-                        randomBox.classList.add('active');
-                        setTimeout(() => {
-                            randomBox.classList.remove('active');
-                        }, 1000);
-                    }
-                }
-            } else {
-                box.classList.remove('active');
-            }
-        });
-    });
-
-    // Auto-animate some boxes randomly
-    setInterval(() => {
-        const randomBox = boxes[Math.floor(Math.random() * boxes.length)];
-        randomBox.classList.add('active');
-        setTimeout(() => {
-            randomBox.classList.remove('active');
-        }, 2000);
-    }, 3000);
-}
 
 // Initialize background effects
 function initBackgroundEffects() {
-    createBackgroundGrid();
     createFloatingParticles();
-    initBackgroundInteraction();
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   initBackgroundEffects();
-});
-
-// Handle window resize
-window.addEventListener('resize', () => {
-    // Remove existing boxes
-    const existingBoxes = document.querySelector('.bg-boxes');
-    if (existingBoxes) {
-        existingBoxes.remove();
-    }
-    
-    // Recreate boxes with new dimensions
-    setTimeout(() => {
-        const boxes = createBackgroundBoxes();
-        // Re-initialize interaction
-        initBackgroundInteraction();
-    }, 100);
 });
 
 // Enhanced project card interaction
